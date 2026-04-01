@@ -2,9 +2,10 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [length, setLength] = useState(120);
-  const [width, setWidth] = useState(60);
+  const [length, setLength] = useState(12);
+  const [width, setWidth] = useState(10);
   const [lights, setLights] = useState(6);
+  const [roomType, setRoomType] = useState("living");
 
   function calculateLayout(length: number, width: number, lights: number) {
     const rows = Math.floor(Math.sqrt(lights));
@@ -26,9 +27,34 @@ export default function Home() {
     };
   }
 
-  const result = calculateLayout(length, width, lights);
+  function calculateWattsAndLumens(length: number, width: number,roomType: string) {
+    const area = length * width;
 
-  const maxSize = 400;
+    let wattsPerSqFt = 0.6;
+    let lumensPerSqFt = 30;
+
+    // Adjust based on room type
+    if (roomType === "bedroom") {
+      lumensPerSqFt = 20;
+    } else if (roomType === "kitchen") {
+      lumensPerSqFt = 40;
+    } else if (roomType === "living") {
+      lumensPerSqFt = 30;
+    }
+
+    const watts = area * wattsPerSqFt;
+    const lumens = area * lumensPerSqFt;
+  
+    return { watts, lumens};
+  }
+
+  const result = calculateLayout(length, width, lights);
+  const lighting = calculateWattsAndLumens(length, width, roomType);
+
+  const lumensPerLight = 800;
+  const recommendedLights = Math.ceil(lighting.lumens / lumensPerLight) + (Math.ceil(lighting.lumens / lumensPerLight) % 2);
+
+  const maxSize = 600;
   const scale = Math.min(maxSize / length, maxSize / width);
 
   const roomWidthPx = length * scale;
@@ -36,34 +62,106 @@ export default function Home() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Lighting Calculator</h2>
 
-      {/* Inputs */}
-      <div style={{ display: "flex", gap: 10 }}>
-        <input
-          type="number"
-          value={length}
-          onChange={(e) => setLength(Number(e.target.value))}
-          placeholder="Length"
-        />
-        <input
-          type="number"
-          value={width}
-          onChange={(e) => setWidth(Number(e.target.value))}
-          placeholder="Width"
-        />
-        <input
-          type="number"
-          value={lights}
-          onChange={(e) => setLights(Number(e.target.value))}
-          placeholder="Lights"
-        />
+      <div
+        style={{
+          display: "flex",
+          gap: 40,
+          alignItems: "flex-start",
+          marginTop: 20,
+        }}
+      >
+        {/* LEFT SIDE → Room Settings */}
+        <div
+          style={{
+            display: "flex",
+            background: "#99c0ea",
+            color: "black",
+            flexDirection: "column",
+            gap: 15,
+            maxWidth: 250,
+            padding: 15,
+            borderRadius: 8,
+          }}
+        >
+          <h3 style={{ marginTop: 20, fontWeight: 'bold', fontSize: '24px' }}>Input Room Settings</h3>
+
+          {/* Inputs */}
+          <div style={{ display: "flex", flexDirection: "column", maxWidth: 250 }}>
+            <label>Room Type</label>
+            <select
+              value={roomType}
+              onChange={(e) => setRoomType(e.target.value)}
+              style={{ padding: 6 }}
+            >
+              <option value="living">Living Room</option>
+              <option value="bedroom">Bedroom</option>
+              <option value="kitchen">Kitchen</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Length in ft.</label>
+            <input
+              type="number"
+              value={length}
+              onChange={(e) => setLength(Number(e.target.value))}
+            />
+          </div>
+
+          <div>
+            <label>Width in ft.</label>
+            <input
+              type="number"
+              value={width}
+              onChange={(e) => setWidth(Number(e.target.value))}
+            />
+          </div>
+
+          <div>
+            <label>Number of Lights</label>
+            <input
+              type="number"
+              value={lights}
+              onChange={(e) => setLights(Number(e.target.value))}
+            />
+          </div>
+        </div>
+
+        {/* RIGHT SIDE → Recommended Lighting */}
+        <div
+          style={{
+            padding: 15,
+            border: "1px solid #ddd",
+            borderRadius: 8,
+            background: "#a8e485",
+            minWidth: 220,
+            color: "black",
+          }}
+        >
+          <h3 style={{fontWeight: "bold"}}>Recommended Lighting</h3>
+
+          <p>
+            <strong>Total Watts:</strong> {lighting.watts.toFixed(1)} W
+          </p>
+
+          <p>
+            <strong>Total Lumens:</strong> {lighting.lumens.toFixed(0)} lm
+          </p>
+
+          <p>
+            <strong>Recommended Lights (800 lm each):</strong>{" "}
+            {recommendedLights}
+          </p>
+        </div>
       </div>
+
+      <h3 style={{ marginTop: 50, fontWeight: 'bold', fontSize: '24px' }}>Lights positioning</h3>
 
       {/* Room */}
       <div
         style={{
-          marginTop: 40,
+          marginTop: 10,
           position: "relative",
           width: roomWidthPx,
           height: roomHeightPx,
