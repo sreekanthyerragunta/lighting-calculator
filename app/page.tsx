@@ -67,7 +67,8 @@ export default function Home() {
         style={{
           display: "flex",
           gap: 40,
-          alignItems: "flex-start",
+          flexDirection: "column",
+          alignItems: "flex-stanprt",
           marginTop: 20,
         }}
       >
@@ -79,29 +80,29 @@ export default function Home() {
             color: "black",
             flexDirection: "column",
             gap: 15,
-            maxWidth: 250,
+            minWidth: 220,
+            maxWidth: 600,
             padding: 15,
             borderRadius: 8,
-          }}
-        >
+          }}>
+
           <h3 style={{ marginTop: 20, fontWeight: 'bold', fontSize: '24px' }}>Input Room Settings</h3>
 
           {/* Inputs */}
-          <div style={{ display: "flex", flexDirection: "column", maxWidth: 250 }}>
-            <label>Room Type</label>
+          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
+            <label style = {{fontWeight: "bold"}}>Room Type</label>
             <select
               value={roomType}
               onChange={(e) => setRoomType(e.target.value)}
-              style={{ padding: 6 }}
-            >
+              style={{ padding: 6 }}>
               <option value="living">Living Room</option>
               <option value="bedroom">Bedroom</option>
               <option value="kitchen">Kitchen</option>
             </select>
           </div>
 
-          <div>
-            <label>Length in ft.</label>
+          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
+            <label style = {{fontWeight: "bold"}}>Length in ft.</label>
             <input
               type="number"
               value={length}
@@ -109,8 +110,8 @@ export default function Home() {
             />
           </div>
 
-          <div>
-            <label>Width in ft.</label>
+          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
+            <label style = {{fontWeight: "bold"}}>Width in ft.</label>
             <input
               type="number"
               value={width}
@@ -118,8 +119,8 @@ export default function Home() {
             />
           </div>
 
-          <div>
-            <label>Number of Lights</label>
+          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
+            <label style = {{fontWeight: "bold"}}>Number of Lights</label>
             <input
               type="number"
               value={lights}
@@ -136,6 +137,7 @@ export default function Home() {
             borderRadius: 8,
             background: "#a8e485",
             minWidth: 220,
+            maxWidth: 600,
             color: "black",
           }}
         >
