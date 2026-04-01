@@ -80,7 +80,7 @@ export default function Home() {
             color: "black",
             flexDirection: "column",
             gap: 15,
-            minWidth: 220,
+            width: 600,
             maxWidth: 600,
             padding: 15,
             borderRadius: 8,
@@ -136,7 +136,7 @@ export default function Home() {
             border: "1px solid #ddd",
             borderRadius: 8,
             background: "#a8e485",
-            minWidth: 220,
+            width: 600,
             maxWidth: 600,
             color: "black",
           }}
@@ -208,6 +208,7 @@ export default function Home() {
             top: 0,
             left: 0,
             pointerEvents: "none",
+            maxWidth: 600,
           }}
         >
           <defs>
