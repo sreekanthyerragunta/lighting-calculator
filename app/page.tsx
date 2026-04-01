@@ -165,9 +165,9 @@ export default function Home() {
         style={{
           marginTop: 10,
           position: "relative",
-          width: "100%",
+          width: roomWidthPx,
           maxWidth: 600,
-          aspectRatio: length / width,
+          height: roomHeightPx,
           border: "2px solid black",
           background: "#f9f9f9",
         }}>
@@ -201,10 +201,15 @@ export default function Home() {
 
         {/* SVG DIMENSIONS */}
         <svg
-          width="100%"
-          height="100%"
-          viewBox={"0 0 " + roomWidthPx + " " + roomHeightPx}
-          preserveAspectRatio="xMidYMid meet">
+          width={roomWidthPx}
+          height={roomHeightPx}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            pointerEvents: "none",
+          }}
+        >
           <defs>
             <marker
               id="arrow"
