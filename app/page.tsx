@@ -1,65 +1,229 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
 export default function Home() {
+  const [length, setLength] = useState(120);
+  const [width, setWidth] = useState(60);
+  const [lights, setLights] = useState(6);
+
+  function calculateLayout(length: number, width: number, lights: number) {
+    const rows = Math.floor(Math.sqrt(lights));
+    const cols = Math.ceil(lights / rows);
+
+    const spacingX = length / cols;
+    const spacingY = width / rows;
+
+    const wallOffsetX = spacingX / 2;
+    const wallOffsetY = spacingY / 2;
+
+    return {
+      rows,
+      cols,
+      spacingX,
+      spacingY,
+      wallOffsetX,
+      wallOffsetY,
+    };
+  }
+
+  const result = calculateLayout(length, width, lights);
+
+  const maxSize = 400;
+  const scale = Math.min(maxSize / length, maxSize / width);
+
+  const roomWidthPx = length * scale;
+  const roomHeightPx = width * scale;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div style={{ padding: 20 }}>
+      <h2>Lighting Calculator</h2>
+
+      {/* Inputs */}
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          type="number"
+          value={length}
+          onChange={(e) => setLength(Number(e.target.value))}
+          placeholder="Length"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+        <input
+          type="number"
+          value={width}
+          onChange={(e) => setWidth(Number(e.target.value))}
+          placeholder="Width"
+        />
+        <input
+          type="number"
+          value={lights}
+          onChange={(e) => setLights(Number(e.target.value))}
+          placeholder="Lights"
+        />
+      </div>
+
+      {/* Room */}
+      <div
+        style={{
+          marginTop: 40,
+          position: "relative",
+          width: roomWidthPx,
+          height: roomHeightPx,
+          border: "2px solid black",
+          background: "#f9f9f9",
+        }}
+      >
+        {/* LIGHTS */}
+        {Array.from({ length: result.rows }).map((_, row) =>
+          Array.from({ length: result.cols }).map((_, col) => {
+            const x =
+              (result.wallOffsetX + col * result.spacingX) * scale;
+
+            const y =
+              (result.wallOffsetY + row * result.spacingY) * scale;
+
+            return (
+              <div
+                key={`${row}-${col}`}
+                style={{
+                  position: "absolute",
+                  left: x,
+                  top: y,
+                  width: 12,
+                  height: 12,
+                  background: "orange",
+                  borderRadius: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+            );
+          })
+        )}
+
+        {/* SVG DIMENSIONS */}
+        <svg
+          width={roomWidthPx}
+          height={roomHeightPx}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            pointerEvents: "none",
+          }}
+        >
+          <defs>
+            <marker
+              id="arrow"
+              markerWidth="6"
+              markerHeight="6"
+              refX="3"
+              refY="3"
+              orient="auto"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+              <path d="M0,0 L6,3 L0,6 Z" fill="blue" />
+            </marker>
+          </defs>
+
+          {/* TOP TOTAL LENGTH */}
+          <line
+            x1={0}
+            y1={15}
+            x2={roomWidthPx}
+            y2={15}
+            stroke="blue"
+            strokeWidth="1.5"
+            markerStart="url(#arrow)"
+            markerEnd="url(#arrow)"
+          />
+          <text
+            x={roomWidthPx / 2}
+            y={12}
+            textAnchor="middle"
+            fontSize="12"
+            fill="blue"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            {length}
+          </text>
+
+          {/* HORIZONTAL SEGMENTS */}
+          {Array.from({ length: result.cols }).map((_, i) => {
+            const x1 =
+              (i === 0
+                ? 0
+                : result.wallOffsetX + (i - 1) * result.spacingX) *
+              scale;
+
+            const x2 =
+              (result.wallOffsetX + i * result.spacingX) * scale;
+
+            const value =
+              i === 0 || i === result.cols
+                ? result.wallOffsetX
+                : result.spacingX;
+
+            return (
+              <g key={i}>
+                <line
+                  x1={x1}
+                  y1={roomHeightPx / 2}
+                  x2={x2}
+                  y2={roomHeightPx / 2}
+                  stroke="blue"
+                  markerStart="url(#arrow)"
+                  markerEnd="url(#arrow)"
+                />
+                <text
+                  x={(x1 + x2) / 2}
+                  y={roomHeightPx / 2 - 5}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fill="red"
+                >
+                  {value.toFixed(1)}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* VERTICAL SEGMENTS */}
+          {Array.from({ length: result.rows }).map((_, i) => {
+            const y1 =
+              (i === 0
+                ? 0
+                : result.wallOffsetY + (i - 1) * result.spacingY) *
+              scale;
+
+            const y2 =
+              (result.wallOffsetY + i * result.spacingY) * scale;
+
+            const value =
+              i === 0 || i === result.rows
+                ? result.wallOffsetY
+                : result.spacingY;
+
+            return (
+              <g key={i}>
+                <line
+                  x1={roomWidthPx - 15}
+                  y1={y1}
+                  x2={roomWidthPx - 15}
+                  y2={y2}
+                  stroke="blue"
+                  markerStart="url(#arrow)"
+                  markerEnd="url(#arrow)"
+                />
+                <text
+                  x={roomWidthPx - 30}
+                  y={(y1 + y2) / 2}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fill="red"
+                >
+                  {value.toFixed(1)}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
     </div>
   );
 }
