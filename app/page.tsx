@@ -54,14 +54,14 @@ export default function Home() {
   const lumensPerLight = 800;
   const recommendedLights = Math.ceil(lighting.lumens / lumensPerLight) + (Math.ceil(lighting.lumens / lumensPerLight) % 2);
 
-  const maxSize = 600;
+  const maxSize = 360;
   const scale = Math.min(maxSize / length, maxSize / width);
 
   const roomWidthPx = length * scale;
   const roomHeightPx = width * scale;
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20}}>
 
       <div
         style={{
@@ -70,6 +70,7 @@ export default function Home() {
           flexDirection: "column",
           alignItems: "flex-stanprt",
           marginTop: 20,
+          maxWidth: 360,
         }}
       >
         {/* LEFT SIDE → Room Settings */}
@@ -81,7 +82,8 @@ export default function Home() {
             flexDirection: "column",
             gap: 15,
             minWidth: 220,
-            maxWidth: 600,
+            width: "100%",
+            maxWidth: 360,
             padding: 15,
             borderRadius: 8,
           }}>
@@ -137,7 +139,8 @@ export default function Home() {
             borderRadius: 8,
             background: "#a8e485",
             minWidth: 220,
-            maxWidth: 600,
+            width: "100%",
+            maxWidth: 360,
             color: "black",
           }}
         >
@@ -158,7 +161,7 @@ export default function Home() {
         </div>
       </div>
 
-      <h3 style={{ marginTop: 50, fontWeight: 'bold', fontSize: '24px' }}>Lights positioning</h3>
+      <h3 style={{ marginTop: 50, fontWeight: 'bold', fontSize: '24px', maxWidth: 360}}>Lights positioning</h3>
 
       {/* Room */}
       <div
@@ -166,7 +169,7 @@ export default function Home() {
           marginTop: 10,
           position: "relative",
           width: roomWidthPx,
-          maxWidth: 600,
+          maxWidth: 360,
           height: roomHeightPx,
           border: "2px solid black",
           background: "#f9f9f9",
@@ -208,7 +211,7 @@ export default function Home() {
             top: 0,
             left: 0,
             pointerEvents: "none",
-            maxWidth: 600
+            maxWidth: 360
           }}
         >
           <defs>
