@@ -165,12 +165,13 @@ export default function Home() {
         style={{
           marginTop: 10,
           position: "relative",
-          width: roomWidthPx,
-          height: roomHeightPx,
-          border: "2px solid black",
+          width: "100%",
+          maxWidth: 600,
+          aspectRatio: length / width,
+          border: "4px solid black",
           background: "#f9f9f9",
-        }}
-      >
+        }}>
+          
         {/* LIGHTS */}
         {Array.from({ length: result.rows }).map((_, row) =>
           Array.from({ length: result.cols }).map((_, col) => {
