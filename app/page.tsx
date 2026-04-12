@@ -4,8 +4,9 @@ import { useState } from "react";
 export default function Home() {
   const [length, setLength] = useState(12);
   const [width, setWidth] = useState(10);
-  const [lights, setLights] = useState(6);
+  //const [lights, setLights] = useState(6);
   const [roomType, setRoomType] = useState("living");
+  const [lumensPerLight, setLumensPerLight] = useState(800);
 
   function calculateLayout(length: number, width: number, lights: number) {
     const rows = Math.floor(Math.sqrt(lights));
@@ -48,11 +49,11 @@ export default function Home() {
     return { watts, lumens};
   }
 
-  const result = calculateLayout(length, width, lights);
   const lighting = calculateWattsAndLumens(length, width, roomType);
 
-  const lumensPerLight = 800;
   const recommendedLights = Math.ceil(lighting.lumens / lumensPerLight) + (Math.ceil(lighting.lumens / lumensPerLight) % 2);
+  //can also pass ligths instead of recommended lights as parameter to keep both dropdown and recommended lights
+  const result = calculateLayout(length, width, recommendedLights);
 
   const maxSize = 360;
   const scale = Math.min(maxSize / length, maxSize / width);
@@ -96,7 +97,13 @@ export default function Home() {
             <select
               value={roomType}
               onChange={(e) => setRoomType(e.target.value)}
-              style={{ padding: 6 }}>
+              style={{
+                border: "2px solid #67a0c4", // Thickness, style, and color
+                borderRadius: "4px",      // Rounds the corners
+                padding: "8px",           // Adds space inside the box
+                outline: "none",           // Removes the default browser glow
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+              }}>
               <option value="living">Living Room</option>
               <option value="bedroom">Bedroom</option>
               <option value="kitchen">Kitchen</option>
@@ -109,6 +116,13 @@ export default function Home() {
               type="number"
               value={length}
               onChange={(e) => setLength(Number(e.target.value))}
+              style={{
+                border: "2px solid #67a0c4", // Thickness, style, and color
+                borderRadius: "4px",      // Rounds the corners
+                padding: "8px",           // Adds space inside the box
+                outline: "none",           // Removes the default browser glow
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+              }}
             />
           </div>
 
@@ -118,15 +132,29 @@ export default function Home() {
               type="number"
               value={width}
               onChange={(e) => setWidth(Number(e.target.value))}
+              style={{
+                border: "2px solid #67a0c4", // Thickness, style, and color
+                borderRadius: "4px",      // Rounds the corners
+                padding: "8px",           // Adds space inside the box
+                outline: "none",           // Removes the default browser glow
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+              }}
             />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap:5}}>
-            <label style = {{fontWeight: "bold"}}>Number of Lights</label>
+            <label style = {{fontWeight: "bold"}}>Lumens per light</label>
             <input
               type="number"
-              value={lights}
-              onChange={(e) => setLights(Number(e.target.value))}
+              value={lumensPerLight}
+              onChange={(e) => setLumensPerLight(Number(e.target.value))}
+              style={{
+                border: "2px solid #67a0c4", // Thickness, style, and color
+                borderRadius: "4px",      // Rounds the corners
+                padding: "8px",           // Adds space inside the box
+                outline: "none",           // Removes the default browser glow
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+              }}
             />
           </div>
         </div>
@@ -144,7 +172,7 @@ export default function Home() {
             color: "black",
           }}
         >
-          <h3 style={{fontWeight: "bold"}}>Recommended Lighting</h3>
+          <h3 style={{fontWeight: "bold", fontSize: '24px'}}>Recommended Lighting</h3>
 
           <p>
             <strong>Total Watts:</strong> {lighting.watts.toFixed(1)} W
@@ -155,7 +183,7 @@ export default function Home() {
           </p>
 
           <p>
-            <strong>Recommended Lights (800 lm each):</strong>{" "}
+            <strong>Recommended Lights:</strong>{" "}
             {recommendedLights}
           </p>
         </div>
