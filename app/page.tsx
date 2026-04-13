@@ -106,11 +106,11 @@ export default function Home() {
             color: "black"
           }}
         >
-          <h3 style={{ fontSize: 20, fontWeight: "bold" }}>
+          <h3 style={{ fontSize: 24, fontWeight: "bold" }}>
             Input Room Settings
           </h3>
 
-          <label>Room Type</label>
+          <label style = {{fontWeight: "bold"}}>Room Type</label>
           <select
             value={inputs.roomType}
             onChange={(e) => handleChange("roomType", e.target.value)}
@@ -127,7 +127,7 @@ export default function Home() {
             <option value="kitchen">Kitchen</option>
           </select>
 
-          <label>Length</label>
+          <label style = {{fontWeight: "bold"}}>Length</label>
           <input
             type="number"
             value={inputs.length}
@@ -141,7 +141,7 @@ export default function Home() {
               }}
           />
 
-          <label>Width</label>
+          <label style = {{fontWeight: "bold"}}>Width</label>
           <input
             type="number"
             value={inputs.width}
@@ -155,7 +155,7 @@ export default function Home() {
               }}
           />
 
-          <label>Lumens per light</label>
+          <label style = {{fontWeight: "bold"}}>Lumens per light</label>
           <input
             type="number"
             value={inputs.lumensPerLight}
