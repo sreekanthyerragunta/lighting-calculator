@@ -2,11 +2,36 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [length, setLength] = useState(12);
-  const [width, setWidth] = useState(10);
-  //const [lights, setLights] = useState(6);
-  const [roomType, setRoomType] = useState("living");
-  const [lumensPerLight, setLumensPerLight] = useState(800);
+  // INPUT STATE (user typing)
+  const [inputs, setInputs] = useState({
+    length: 12,
+    width: 10,
+    roomType: "living",
+    lumensPerLight: 800,
+  });
+
+  // APPLIED STATE (used for calculation)
+  const [appliedInputs, setAppliedInputs] = useState(inputs);
+
+  // DIRTY FLAG
+  const [isDirty, setIsDirty] = useState(false);
+
+  // HANDLE INPUT CHANGE
+  const handleChange = (field: string, value: any) => {
+    setInputs((prev) => ({
+      ...prev,
+      [field]: field === "roomType" ? value : Number(value),
+    }));
+    setIsDirty(true);
+  };
+
+  // CALCULATE BUTTON
+  const handleCalculate = () => {
+    setAppliedInputs(inputs);
+    setIsDirty(false);
+  };
+
+  // ---------------- CALCULATIONS ----------------
 
   function calculateLayout(length: number, width: number, lights: number) {
     const rows = Math.floor(Math.sqrt(lights));
@@ -18,41 +43,37 @@ export default function Home() {
     const wallOffsetX = spacingX / 2;
     const wallOffsetY = spacingY / 2;
 
-    return {
-      rows,
-      cols,
-      spacingX,
-      spacingY,
-      wallOffsetX,
-      wallOffsetY,
-    };
+    return { rows, cols, spacingX, spacingY, wallOffsetX, wallOffsetY };
   }
 
-  function calculateWattsAndLumens(length: number, width: number,roomType: string) {
+  function calculateWattsAndLumens(
+    length: number,
+    width: number,
+    roomType: string
+  ) {
     const area = length * width;
 
     let wattsPerSqFt = 0.6;
     let lumensPerSqFt = 30;
 
-    // Adjust based on room type
-    if (roomType === "bedroom") {
-      lumensPerSqFt = 20;
-    } else if (roomType === "kitchen") {
-      lumensPerSqFt = 40;
-    } else if (roomType === "living") {
-      lumensPerSqFt = 30;
-    }
+    if (roomType === "bedroom") lumensPerSqFt = 20;
+    else if (roomType === "kitchen") lumensPerSqFt = 40;
 
-    const watts = area * wattsPerSqFt;
-    const lumens = area * lumensPerSqFt;
-  
-    return { watts, lumens};
+    return {
+      watts: area * wattsPerSqFt,
+      lumens: area * lumensPerSqFt,
+    };
   }
+
+  // USE APPLIED VALUES ONLY
+  const { length, width, roomType, lumensPerLight } = appliedInputs;
 
   const lighting = calculateWattsAndLumens(length, width, roomType);
 
-  const recommendedLights = Math.ceil(lighting.lumens / lumensPerLight) + (Math.ceil(lighting.lumens / lumensPerLight) % 2);
-  //can also pass ligths instead of recommended lights as parameter to keep both dropdown and recommended lights
+  const recommendedLights =
+    Math.ceil(lighting.lumens / lumensPerLight) +
+    (Math.ceil(lighting.lumens / lumensPerLight) % 2);
+
   const result = calculateLayout(length, width, recommendedLights);
 
   const maxSize = 360;
@@ -61,106 +82,114 @@ export default function Home() {
   const roomWidthPx = length * scale;
   const roomHeightPx = width * scale;
 
-  return (
-    <div style={{ padding: 20}}>
+  // ---------------- UI ----------------
 
+  return (
+    <div style={{ padding: 20 }}>
       <div
         style={{
           display: "flex",
-          gap: 40,
           flexDirection: "column",
-          alignItems: "flex-stanprt",
-          marginTop: 20,
+          gap: 20,
           maxWidth: 360,
         }}
       >
-        {/* LEFT SIDE → Room Settings */}
+        {/* INPUT CARD */}
         <div
           style={{
-            display: "flex",
             background: "#99c0ea",
-            color: "black",
-            flexDirection: "column",
-            gap: 15,
-            minWidth: 220,
-            width: "100%",
-            maxWidth: 360,
             padding: 15,
             borderRadius: 8,
-          }}>
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+            color: "black"
+          }}
+        >
+          <h3 style={{ fontSize: 20, fontWeight: "bold" }}>
+            Input Room Settings
+          </h3>
 
-          <h3 style={{ marginTop: 20, fontWeight: 'bold', fontSize: '24px' }}>Input Room Settings</h3>
-
-          {/* Inputs */}
-          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
-            <label style = {{fontWeight: "bold"}}>Room Type</label>
-            <select
-              value={roomType}
-              onChange={(e) => setRoomType(e.target.value)}
-              style={{
-                border: "2px solid #67a0c4", // Thickness, style, and color
-                borderRadius: "4px",      // Rounds the corners
-                padding: "8px",           // Adds space inside the box
-                outline: "none",           // Removes the default browser glow
-                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-              }}>
-              <option value="living">Living Room</option>
-              <option value="bedroom">Bedroom</option>
-              <option value="kitchen">Kitchen</option>
-            </select>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
-            <label style = {{fontWeight: "bold"}}>Length in ft.</label>
-            <input
-              type="number"
-              value={length}
-              onChange={(e) => setLength(Number(e.target.value))}
-              style={{
+          <label>Room Type</label>
+          <select
+            value={inputs.roomType}
+            onChange={(e) => handleChange("roomType", e.target.value)}
+            style={{
                 border: "2px solid #67a0c4", // Thickness, style, and color
                 borderRadius: "4px",      // Rounds the corners
                 padding: "8px",           // Adds space inside the box
                 outline: "none",           // Removes the default browser glow
                 boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
               }}
-            />
-          </div>
+          >
+            <option value="living">Living Room</option>
+            <option value="bedroom">Bedroom</option>
+            <option value="kitchen">Kitchen</option>
+          </select>
 
-          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
-            <label style = {{fontWeight: "bold"}}>Width in ft.</label>
-            <input
-              type="number"
-              value={width}
-              onChange={(e) => setWidth(Number(e.target.value))}
-              style={{
+          <label>Length</label>
+          <input
+            type="number"
+            value={inputs.length}
+            onChange={(e) => handleChange("length", e.target.value)}
+            style={{
                 border: "2px solid #67a0c4", // Thickness, style, and color
                 borderRadius: "4px",      // Rounds the corners
                 padding: "8px",           // Adds space inside the box
                 outline: "none",           // Removes the default browser glow
                 boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
               }}
-            />
-          </div>
+          />
 
-          <div style={{ display: "flex", flexDirection: "column", gap:5}}>
-            <label style = {{fontWeight: "bold"}}>Lumens per light</label>
-            <input
-              type="number"
-              value={lumensPerLight}
-              onChange={(e) => setLumensPerLight(Number(e.target.value))}
-              style={{
+          <label>Width</label>
+          <input
+            type="number"
+            value={inputs.width}
+            onChange={(e) => handleChange("width", e.target.value)}
+            style={{
                 border: "2px solid #67a0c4", // Thickness, style, and color
                 borderRadius: "4px",      // Rounds the corners
                 padding: "8px",           // Adds space inside the box
                 outline: "none",           // Removes the default browser glow
                 boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
               }}
-            />
-          </div>
+          />
+
+          <label>Lumens per light</label>
+          <input
+            type="number"
+            value={inputs.lumensPerLight}
+            onChange={(e) => handleChange("lumensPerLight", e.target.value)}
+            style={{
+                border: "2px solid #67a0c4", // Thickness, style, and color
+                borderRadius: "4px",      // Rounds the corners
+                padding: "8px",           // Adds space inside the box
+                outline: "none",           // Removes the default browser glow
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+              }}
+          />
+
+          {/* CALCULATE BUTTON */}
+          <button
+            onClick={handleCalculate}
+            disabled={!isDirty}
+            style={{
+              marginTop: 10,
+              padding: 10,
+              backgroundColor: isDirty ? "#007bff" : "#6da5e1",
+              color: "white",
+              border: "none",
+              borderRadius: 4,
+              cursor: isDirty ? "pointer" : "not-allowed",
+            }}
+          >
+            Calculate
+          </button>
         </div>
 
         {/* RIGHT SIDE → Recommended Lighting */}
-        <div
+        {!isDirty && (
+          <div
           style={{
             padding: 15,
             border: "1px solid #ddd",
@@ -170,8 +199,7 @@ export default function Home() {
             width: "100%",
             maxWidth: 360,
             color: "black",
-          }}
-        >
+          }}>
           <h3 style={{fontWeight: "bold", fontSize: '24px'}}>Recommended Lighting</h3>
 
           <p>
@@ -187,176 +215,181 @@ export default function Home() {
             {recommendedLights}
           </p>
         </div>
-      </div>
-
-      <h3 style={{ marginTop: 50, fontWeight: 'bold', fontSize: '24px', maxWidth: 360}}>Lights positioning</h3>
-
-      {/* Room */}
-      <div
-        style={{
-          marginTop: 10,
-          position: "relative",
-          width: roomWidthPx,
-          maxWidth: 360,
-          height: roomHeightPx,
-          border: "2px solid black",
-          background: "#f9f9f9",
-        }}>
-          
-        {/* LIGHTS */}
-        {Array.from({ length: result.rows }).map((_, row) =>
-          Array.from({ length: result.cols }).map((_, col) => {
-            const x =
-              (result.wallOffsetX + col * result.spacingX) * scale;
-
-            const y =
-              (result.wallOffsetY + row * result.spacingY) * scale;
-
-            return (
-              <div
-                key={`${row}-${col}`}
-                style={{
-                  position: "absolute",
-                  left: x,
-                  top: y,
-                  width: 12,
-                  height: 12,
-                  background: "orange",
-                  borderRadius: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              />
-            );
-          })
         )}
-
-        {/* SVG DIMENSIONS */}
-        <svg
-          width={roomWidthPx}
-          height={roomHeightPx}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            pointerEvents: "none",
-            maxWidth: 360
-          }}
-        >
-          <defs>
-            <marker
-              id="arrow"
-              markerWidth="6"
-              markerHeight="6"
-              refX="3"
-              refY="3"
-              orient="auto"
-            >
-              <path d="M0,0 L6,3 L0,6 Z" fill="blue" />
-            </marker>
-          </defs>
-
-          {/* TOP TOTAL LENGTH */}
-          <line
-            x1={0}
-            y1={15}
-            x2={roomWidthPx}
-            y2={15}
-            stroke="blue"
-            strokeWidth="1.5"
-            markerStart="url(#arrow)"
-            markerEnd="url(#arrow)"
-          />
-          <text
-            x={roomWidthPx / 2}
-            y={12}
-            textAnchor="middle"
-            fontSize="12"
-            fill="blue"
-          >
-            {length}
-          </text>
-
-          {/* HORIZONTAL SEGMENTS */}
-          {Array.from({ length: result.cols }).map((_, i) => {
-            const x1 =
-              (i === 0
-                ? 0
-                : result.wallOffsetX + (i - 1) * result.spacingX) *
-              scale;
-
-            const x2 =
-              (result.wallOffsetX + i * result.spacingX) * scale;
-
-            const value =
-              i === 0 || i === result.cols
-                ? result.wallOffsetX
-                : result.spacingX;
-
-            return (
-              <g key={i}>
-                <line
-                  x1={x1}
-                  y1={roomHeightPx / 2}
-                  x2={x2}
-                  y2={roomHeightPx / 2}
-                  stroke="blue"
-                  markerStart="url(#arrow)"
-                  markerEnd="url(#arrow)"
-                />
-                <text
-                  x={(x1 + x2) / 2}
-                  y={roomHeightPx / 2 - 5}
-                  textAnchor="middle"
-                  fontSize="12"
-                  fill="red"
-                >
-                  {value.toFixed(1)}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* VERTICAL SEGMENTS */}
-          {Array.from({ length: result.rows }).map((_, i) => {
-            const y1 =
-              (i === 0
-                ? 0
-                : result.wallOffsetY + (i - 1) * result.spacingY) *
-              scale;
-
-            const y2 =
-              (result.wallOffsetY + i * result.spacingY) * scale;
-
-            const value =
-              i === 0 || i === result.rows
-                ? result.wallOffsetY
-                : result.spacingY;
-
-            return (
-              <g key={i}>
-                <line
-                  x1={roomWidthPx - 15}
-                  y1={y1}
-                  x2={roomWidthPx - 15}
-                  y2={y2}
-                  stroke="blue"
-                  markerStart="url(#arrow)"
-                  markerEnd="url(#arrow)"
-                />
-                <text
-                  x={roomWidthPx - 30}
-                  y={(y1 + y2) / 2}
-                  textAnchor="middle"
-                  fontSize="12"
-                  fill="red"
-                >
-                  {value.toFixed(1)}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
       </div>
+
+      {!isDirty &&(
+        <h3 style={{ marginTop: 50, fontWeight: 'bold', fontSize: '24px', maxWidth: 360}}>Lights positioning</h3>
+      )}
+      
+      {/* Room */}
+      {!isDirty && (
+        <div
+          style={{
+            marginTop: 10,
+            position: "relative",
+            width: roomWidthPx,
+            maxWidth: 360,
+            height: roomHeightPx,
+            border: "2px solid black",
+            background: "#f9f9f9",
+          }}>
+            
+          {/* LIGHTS */}
+          {Array.from({ length: result.rows }).map((_, row) =>
+            Array.from({ length: result.cols }).map((_, col) => {
+              const x =
+                (result.wallOffsetX + col * result.spacingX) * scale;
+
+              const y =
+                (result.wallOffsetY + row * result.spacingY) * scale;
+
+              return (
+                <div
+                  key={`${row}-${col}`}
+                  style={{
+                    position: "absolute",
+                    left: x,
+                    top: y,
+                    width: 12,
+                    height: 12,
+                    background: "orange",
+                    borderRadius: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                />
+              );
+            })
+          )}
+
+          {/* SVG DIMENSIONS */}
+          <svg
+            width={roomWidthPx}
+            height={roomHeightPx}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              pointerEvents: "none",
+              maxWidth: 360
+            }}
+          >
+            <defs>
+              <marker
+                id="arrow"
+                markerWidth="6"
+                markerHeight="6"
+                refX="3"
+                refY="3"
+                orient="auto"
+              >
+                <path d="M0,0 L6,3 L0,6 Z" fill="blue" />
+              </marker>
+            </defs>
+
+            {/* TOP TOTAL LENGTH */}
+            <line
+              x1={0}
+              y1={15}
+              x2={roomWidthPx}
+              y2={15}
+              stroke="blue"
+              strokeWidth="1.5"
+              markerStart="url(#arrow)"
+              markerEnd="url(#arrow)"
+            />
+            <text
+              x={roomWidthPx / 2}
+              y={12}
+              textAnchor="middle"
+              fontSize="12"
+              fill="blue"
+            >
+              {length}
+            </text>
+
+            {/* HORIZONTAL SEGMENTS */}
+            {Array.from({ length: result.cols }).map((_, i) => {
+              const x1 =
+                (i === 0
+                  ? 0
+                  : result.wallOffsetX + (i - 1) * result.spacingX) *
+                scale;
+
+              const x2 =
+                (result.wallOffsetX + i * result.spacingX) * scale;
+
+              const value =
+                i === 0 || i === result.cols
+                  ? result.wallOffsetX
+                  : result.spacingX;
+
+              return (
+                <g key={i}>
+                  <line
+                    x1={x1}
+                    y1={roomHeightPx / 2}
+                    x2={x2}
+                    y2={roomHeightPx / 2}
+                    stroke="blue"
+                    markerStart="url(#arrow)"
+                    markerEnd="url(#arrow)"
+                  />
+                  <text
+                    x={(x1 + x2) / 2}
+                    y={roomHeightPx / 2 - 5}
+                    textAnchor="middle"
+                    fontSize="12"
+                    fill="red"
+                  >
+                    {value.toFixed(1)}
+                  </text>
+                </g>
+              );
+            })}
+
+            {/* VERTICAL SEGMENTS */}
+            {Array.from({ length: result.rows }).map((_, i) => {
+              const y1 =
+                (i === 0
+                  ? 0
+                  : result.wallOffsetY + (i - 1) * result.spacingY) *
+                scale;
+
+              const y2 =
+                (result.wallOffsetY + i * result.spacingY) * scale;
+
+              const value =
+                i === 0 || i === result.rows
+                  ? result.wallOffsetY
+                  : result.spacingY;
+
+              return (
+                <g key={i}>
+                  <line
+                    x1={roomWidthPx - 15}
+                    y1={y1}
+                    x2={roomWidthPx - 15}
+                    y2={y2}
+                    stroke="blue"
+                    markerStart="url(#arrow)"
+                    markerEnd="url(#arrow)"
+                  />
+                  <text
+                    x={roomWidthPx - 30}
+                    y={(y1 + y2) / 2}
+                    textAnchor="middle"
+                    fontSize="12"
+                    fill="red"
+                  >
+                    {value.toFixed(1)}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      )}
     </div>
   );
 }
