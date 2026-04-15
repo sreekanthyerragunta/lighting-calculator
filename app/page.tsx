@@ -127,7 +127,7 @@ export default function Home() {
             <option value="kitchen">Kitchen</option>
           </select>
 
-          <label style = {{fontWeight: "bold"}}>Length</label>
+          <label style = {{fontWeight: "bold"}}>Length in ft.</label>
           <input
             type="number"
             value={inputs.length}
@@ -141,7 +141,7 @@ export default function Home() {
               }}
           />
 
-          <label style = {{fontWeight: "bold"}}>Width</label>
+          <label style = {{fontWeight: "bold"}}>Width in ft.</label>
           <input
             type="number"
             value={inputs.width}
@@ -211,7 +211,7 @@ export default function Home() {
           </p>
 
           <p>
-            <strong>Recommended Lights:</strong>{" "}
+            <strong>Number of Lights:</strong>{" "}
             {recommendedLights}
           </p>
         </div>
