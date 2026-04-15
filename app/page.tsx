@@ -82,6 +82,9 @@ export default function Home() {
   const roomWidthPx = length * scale;
   const roomHeightPx = width * scale;
 
+  // used for disabling the button if fields are empty or 0
+  const isInvalid = Object.values(inputs).some(val => val === 0 || val === "");
+
   // ---------------- UI ----------------
 
   return (
@@ -130,8 +133,14 @@ export default function Home() {
           <label style = {{fontWeight: "bold"}}>Length in ft.</label>
           <input
             type="number"
-            value={inputs.length}
-            onChange={(e) => handleChange("length", e.target.value)}
+            value={inputs.length === 0 ? "" : inputs.length}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              if (target.value.length > 3) {
+                target.value = target.value.slice(0, 3);
+              }
+            }}
+            onChange={(e) => handleChange("length", Number(e.target.value))}
             style={{
                 border: "2px solid #67a0c4", // Thickness, style, and color
                 borderRadius: "4px",      // Rounds the corners
@@ -144,8 +153,14 @@ export default function Home() {
           <label style = {{fontWeight: "bold"}}>Width in ft.</label>
           <input
             type="number"
-            value={inputs.width}
-            onChange={(e) => handleChange("width", e.target.value)}
+            value={inputs.width === 0 ? "": inputs.width}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              if (target.value.length > 3) {
+                target.value = target.value.slice(0, 3);
+              }
+            }}
+            onChange={(e) => handleChange("width", Number(e.target.value))}
             style={{
                 border: "2px solid #67a0c4", // Thickness, style, and color
                 borderRadius: "4px",      // Rounds the corners
@@ -158,8 +173,14 @@ export default function Home() {
           <label style = {{fontWeight: "bold"}}>Lumens per light</label>
           <input
             type="number"
-            value={inputs.lumensPerLight}
-            onChange={(e) => handleChange("lumensPerLight", e.target.value)}
+            value={inputs.lumensPerLight === 0 ? "": inputs.lumensPerLight}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              if (target.value.length > 5) {
+                target.value = target.value.slice(0, 5);
+              }
+            }}
+            onChange={(e) => handleChange("lumensPerLight", Number(e.target.value))}
             style={{
                 border: "2px solid #67a0c4", // Thickness, style, and color
                 borderRadius: "4px",      // Rounds the corners
@@ -172,7 +193,7 @@ export default function Home() {
           {/* CALCULATE BUTTON */}
           <button
             onClick={handleCalculate}
-            disabled={!isDirty}
+            disabled={!isDirty || isInvalid}
             style={{
               marginTop: 10,
               padding: 10,
