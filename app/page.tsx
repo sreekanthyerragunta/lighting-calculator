@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
+import { useRef, useEffect } from "react";
 
 export default function Home() {
+
+  const resultRef = useRef<HTMLDivElement | null>(null);
+  const [showResult, setShowResult] = useState(false);
+
   // INPUT STATE (user typing)
   const [inputs, setInputs] = useState({
     length: 12,
@@ -23,13 +28,21 @@ export default function Home() {
       [field]: field === "roomType" ? value : Number(value),
     }));
     setIsDirty(true);
+    setShowResult(false);
   };
 
   // CALCULATE BUTTON
   const handleCalculate = () => {
     setAppliedInputs(inputs);
     setIsDirty(false);
+    setShowResult(true);
   };
+
+  useEffect(() => {
+    if(showResult){
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [showResult]);
 
   // ---------------- CALCULATIONS ----------------
 
@@ -130,7 +143,7 @@ export default function Home() {
             boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
           }}
         >
-          <h3 style={{ fontSize: 24, fontWeight: "bold" }}>
+          <h3 style={{ fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 10}}>
             Input Room Settings
           </h3>
 
@@ -270,6 +283,7 @@ export default function Home() {
         {/* RIGHT SIDE → Recommended Lighting */}
         {!isDirty && (
           <div
+            ref={resultRef}
             style={{
               padding: 18,
               borderRadius: 12,
@@ -280,9 +294,10 @@ export default function Home() {
               color: "#111", // strong black for readability
               border: "1px solid rgba(34,197,94,0.25)",
               boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+              marginTop: 20
             }}
           >
-          <h3 style={{fontWeight: "bold", fontSize: '24px'}}>Recommended Lighting</h3>
+          <h3 style={{fontWeight: "bold", fontSize: '24px', textAlign: "center", marginBottom: 10}}>Recommended Lighting</h3>
 
           <p>
             <strong>Total Watts:</strong> {lighting.watts.toFixed(1)} W
@@ -301,7 +316,7 @@ export default function Home() {
       </div>
 
       {!isDirty &&(
-        <h3 style={{ marginTop: 20, fontWeight: 'bold', fontSize: '24px', maxWidth: 360, margin: "10px auto 0 auto"}}>Lights positioning</h3>
+        <h3 style={{fontWeight: 'bold', fontSize: '24px', maxWidth: 360, margin: "20px auto 10px auto", textAlign: "center"}}>Lights positioning</h3>
       )}
       
       {/* Room */}
@@ -316,7 +331,7 @@ export default function Home() {
             border: "2px solid black",
             background: "#f9f9f9",
             overflow: "hidden",
-            margin: "10px auto 0 auto",
+            margin: "10px auto 10px auto",
             boxSizing: "border-box"
           }}>
            
