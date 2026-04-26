@@ -91,7 +91,7 @@ export default function Home() {
 
   const result = calculateLayout(length, width, recommendedLights);
 
-  const maxSize = 340;
+  const maxSize = 360;
   const scale = Math.min(maxSize / length, maxSize / width);
 
   const roomWidthPx = length * scale;
@@ -103,13 +103,17 @@ export default function Home() {
   // ---------------- UI ----------------
 
   return (
-    <div style={{ padding: 20 }}>
+    <div>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           gap: 20,
-          maxWidth: 360,
+          width: 360,
+          padding: "10px 0",
+          boxSizing: "border-box",
+          margin: "10px auto 0 auto",
+          marginTop: 10
         }}
       >
         {/* INPUT CARD */}
@@ -123,7 +127,7 @@ export default function Home() {
             gap: 12,
             color: "#1a1a1a",
             border: "1px solid rgba(59,130,246,0.25)",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
           }}
         >
           <h3 style={{ fontSize: 24, fontWeight: "bold" }}>
@@ -297,7 +301,7 @@ export default function Home() {
       </div>
 
       {!isDirty &&(
-        <h3 style={{ marginTop: 50, fontWeight: 'bold', fontSize: '24px', maxWidth: 360}}>Lights positioning</h3>
+        <h3 style={{ marginTop: 20, fontWeight: 'bold', fontSize: '24px', maxWidth: 360, margin: "10px auto 0 auto"}}>Lights positioning</h3>
       )}
       
       {/* Room */}
@@ -305,12 +309,15 @@ export default function Home() {
         <div
           style={{
             marginTop: 10,
+            gap: 20,
             position: "relative",
             width: roomWidthPx,
             height: roomHeightPx,
             border: "2px solid black",
             background: "#f9f9f9",
             overflow: "hidden",
+            margin: "10px auto 0 auto",
+            boxSizing: "border-box"
           }}>
            
           {/* LIGHTS */}
