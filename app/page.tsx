@@ -307,7 +307,7 @@ export default function Home() {
             marginTop: 10,
             position: "relative",
             width: roomWidthPx,
-            maxWidth: 360,
+            maxWidth: "100%",
             height: roomHeightPx,
             border: "2px solid black",
             background: "#f9f9f9",
