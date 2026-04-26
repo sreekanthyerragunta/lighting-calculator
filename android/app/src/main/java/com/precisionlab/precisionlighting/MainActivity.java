@@ -1,4 +1,4 @@
-package com.precisionlighting.app;
+package com.precisionlab.precisionlighting;
 
 import com.getcapacitor.BridgeActivity;
 

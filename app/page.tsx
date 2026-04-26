@@ -34,15 +34,30 @@ export default function Home() {
   // ---------------- CALCULATIONS ----------------
 
   function calculateLayout(length: number, width: number, lights: number) {
-    const rows = Math.floor(Math.sqrt(lights));
-    const cols = Math.ceil(lights / rows);
 
-    const spacingX = length / cols;
-    const spacingY = width / rows;
+    let rows = 0, cols = 0, spacingX = 0, spacingY = 0, wallOffsetX = 0, wallOffsetY = 0;
 
-    const wallOffsetX = spacingX / 2;
-    const wallOffsetY = spacingY / 2;
+    if (length >= width) {
+      rows = Math.floor(Math.sqrt(lights));
+      cols = Math.ceil(lights / rows);
 
+      spacingX = length / cols;
+      spacingY = width / rows;
+      
+      wallOffsetX = spacingX / 2;
+      wallOffsetY = spacingY / 2;
+    }
+    else {
+      cols = Math.floor(Math.sqrt(lights));
+      rows = Math.ceil(lights / cols);
+
+      spacingX = length / cols;
+      spacingY = width / rows;
+
+      wallOffsetX = spacingX / 2;
+      wallOffsetY = spacingY / 2;
+    }
+    
     return { rows, cols, spacingX, spacingY, wallOffsetX, wallOffsetY };
   }
 
@@ -133,11 +148,15 @@ export default function Home() {
           <label style = {{fontWeight: "bold"}}>Length in ft.</label>
           <input
             type="number"
+            step="0.01"
             value={inputs.length === 0 ? "" : inputs.length}
             onInput={(e) => {
               const target = e.target as HTMLInputElement;
-              if (target.value.length > 3) {
-                target.value = target.value.slice(0, 3);
+              const value = target.value;
+              // Regex: up to 3 digits before decimal, optional decimal with up to 2 digits
+              const regex = /^\d{0,3}(\.\d{0,2})?$/;
+              if (!regex.test(value)) {
+                target.value = value.slice(0, -1);
               }
             }}
             onChange={(e) => handleChange("length", Number(e.target.value))}
@@ -153,11 +172,17 @@ export default function Home() {
           <label style = {{fontWeight: "bold"}}>Width in ft.</label>
           <input
             type="number"
-            value={inputs.width === 0 ? "": inputs.width}
+            step="0.01"
+            value={inputs.width === 0 ? "" : inputs.width}
             onInput={(e) => {
               const target = e.target as HTMLInputElement;
-              if (target.value.length > 3) {
-                target.value = target.value.slice(0, 3);
+              const value = target.value;
+
+              // Regex: up to 3 digits before decimal, optional decimal with up to 2 digits
+              const regex = /^\d{0,3}(\.\d{0,2})?$/;
+
+              if (!regex.test(value)) {
+                target.value = value.slice(0, -1);
               }
             }}
             onChange={(e) => handleChange("width", Number(e.target.value))}
