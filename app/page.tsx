@@ -115,13 +115,15 @@ export default function Home() {
         {/* INPUT CARD */}
         <div
           style={{
-            background: "#99c0ea",
-            padding: 15,
-            borderRadius: 8,
+            background: "linear-gradient(135deg, #dbeafe, #eff6ff)",
+            padding: 16,
+            borderRadius: 10,
             display: "flex",
             flexDirection: "column",
-            gap: 10,
-            color: "black"
+            gap: 12,
+            color: "#1a1a1a",
+            border: "1px solid rgba(103,160,196,0.2)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
           }}
         >
           <h3 style={{ fontSize: 24, fontWeight: "bold" }}>
@@ -133,12 +135,25 @@ export default function Home() {
             value={inputs.roomType}
             onChange={(e) => handleChange("roomType", e.target.value)}
             style={{
-                border: "2px solid #67a0c4", // Thickness, style, and color
-                borderRadius: "4px",      // Rounds the corners
-                padding: "8px",           // Adds space inside the box
-                outline: "none",           // Removes the default browser glow
-                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-              }}
+              backgroundColor: "rgba(255, 255, 255, 0.85)", // soft white transparency
+              border: "1px solid rgba(0, 0, 0, 0.15)",      // subtle border
+              borderRadius: "6px",
+              padding: "10px 12px",
+              outline: "none",
+              fontSize: "14px",
+              color: "#333",
+              backdropFilter: "blur(4px)",                  // glass effect (optional)
+              boxShadow: "0 2px 6px rgba(0,0,0,0.08)",      // soft depth
+              transition: "all 0.2s ease"
+            }}
+            onFocus={(e) => {
+              e.target.style.border = "1px solid #67a0c4";
+              e.target.style.boxShadow = "0 0 0 2px rgba(103,160,196,0.2)";
+            }}
+            onBlur={(e) => {
+              e.target.style.border = "1px solid rgba(0,0,0,0.15)";
+              e.target.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)";
+            }}
           >
             <option value="living">Living Room</option>
             <option value="bedroom">Bedroom</option>
@@ -161,12 +176,17 @@ export default function Home() {
             }}
             onChange={(e) => handleChange("length", Number(e.target.value))}
             style={{
-                border: "2px solid #67a0c4", // Thickness, style, and color
-                borderRadius: "4px",      // Rounds the corners
-                padding: "8px",           // Adds space inside the box
-                outline: "none",           // Removes the default browser glow
-                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-              }}
+              backgroundColor: "rgba(255, 255, 255, 0.85)", // soft white transparency
+              border: "1px solid rgba(0, 0, 0, 0.15)",      // subtle border
+              borderRadius: "6px",
+              padding: "10px 12px",
+              outline: "none",
+              fontSize: "14px",
+              color: "#333",
+              backdropFilter: "blur(4px)",                  // glass effect (optional)
+              boxShadow: "0 2px 6px rgba(0,0,0,0.08)",      // soft depth
+              transition: "all 0.2s ease"
+            }}
           />
 
           <label style = {{fontWeight: "bold"}}>Width in ft.</label>
@@ -187,12 +207,17 @@ export default function Home() {
             }}
             onChange={(e) => handleChange("width", Number(e.target.value))}
             style={{
-                border: "2px solid #67a0c4", // Thickness, style, and color
-                borderRadius: "4px",      // Rounds the corners
-                padding: "8px",           // Adds space inside the box
-                outline: "none",           // Removes the default browser glow
-                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-              }}
+              backgroundColor: "rgba(255, 255, 255, 0.85)", // soft white transparency
+              border: "1px solid rgba(0, 0, 0, 0.15)",      // subtle border
+              borderRadius: "6px",
+              padding: "10px 12px",
+              outline: "none",
+              fontSize: "14px",
+              color: "#333",
+              backdropFilter: "blur(4px)",                  // glass effect (optional)
+              boxShadow: "0 2px 6px rgba(0,0,0,0.08)",      // soft depth
+              transition: "all 0.2s ease"
+            }}
           />
 
           <label style = {{fontWeight: "bold"}}>Lumens per light</label>
@@ -207,12 +232,17 @@ export default function Home() {
             }}
             onChange={(e) => handleChange("lumensPerLight", Number(e.target.value))}
             style={{
-                border: "2px solid #67a0c4", // Thickness, style, and color
-                borderRadius: "4px",      // Rounds the corners
-                padding: "8px",           // Adds space inside the box
-                outline: "none",           // Removes the default browser glow
-                boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-              }}
+              backgroundColor: "rgba(255, 255, 255, 0.85)", // soft white transparency
+              border: "1px solid rgba(0, 0, 0, 0.15)",      // subtle border
+              borderRadius: "6px",
+              padding: "10px 12px",
+              outline: "none",
+              fontSize: "14px",
+              color: "#333",
+              backdropFilter: "blur(4px)",                  // glass effect (optional)
+              boxShadow: "0 2px 6px rgba(0,0,0,0.08)",      // soft depth
+              transition: "all 0.2s ease"
+            }}
           />
 
           {/* CALCULATE BUTTON */}
@@ -236,16 +266,18 @@ export default function Home() {
         {/* RIGHT SIDE → Recommended Lighting */}
         {!isDirty && (
           <div
-          style={{
-            padding: 15,
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            background: "#a8e485",
-            minWidth: 220,
-            width: "100%",
-            maxWidth: 360,
-            color: "black",
-          }}>
+            style={{
+              padding: 18,
+              borderRadius: 12,
+              background: "linear-gradient(135deg, #d9f99d, #bbf7d0)", // softer green blend
+              minWidth: 220,
+              width: "100%",
+              maxWidth: 360,
+              color: "#111", // strong black for readability
+              border: "1px solid rgba(34,197,94,0.25)",
+              boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+            }}
+          >
           <h3 style={{fontWeight: "bold", fontSize: '24px'}}>Recommended Lighting</h3>
 
           <p>
