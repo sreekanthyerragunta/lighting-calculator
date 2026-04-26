@@ -91,7 +91,7 @@ export default function Home() {
 
   const result = calculateLayout(length, width, recommendedLights);
 
-  const maxSize = 360;
+  const maxSize = 340;
   const scale = Math.min(maxSize / length, maxSize / width);
 
   const roomWidthPx = length * scale;
@@ -116,8 +116,8 @@ export default function Home() {
         <div
           style={{
             background: "linear-gradient(135deg, #bfdbfe, #dbeafe)",
-            padding: 16,
-            borderRadius: 10,
+            padding: 18,
+            borderRadius: 12,
             display: "flex",
             flexDirection: "column",
             gap: 12,
@@ -307,13 +307,12 @@ export default function Home() {
             marginTop: 10,
             position: "relative",
             width: roomWidthPx,
-            maxWidth: "100%",
             height: roomHeightPx,
             border: "2px solid black",
             background: "#f9f9f9",
             overflow: "hidden",
           }}>
-            
+           
           {/* LIGHTS */}
           {Array.from({ length: result.rows }).map((_, row) =>
             Array.from({ length: result.cols }).map((_, col) => {
@@ -345,12 +344,13 @@ export default function Home() {
           <svg
             width={roomWidthPx}
             height={roomHeightPx}
+            viewBox={`0 0 ${roomWidthPx} ${roomHeightPx}`}
             style={{
               position: "absolute",
               top: 0,
               left: 0,
               pointerEvents: "none",
-              maxWidth: 360
+              display: "block",
             }}
           >
             <defs>
