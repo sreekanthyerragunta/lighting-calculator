@@ -115,14 +115,14 @@ export default function Home() {
         {/* INPUT CARD */}
         <div
           style={{
-            background: "linear-gradient(135deg, #dbeafe, #eff6ff)",
+            background: "linear-gradient(135deg, #bfdbfe, #dbeafe)",
             padding: 16,
             borderRadius: 10,
             display: "flex",
             flexDirection: "column",
             gap: 12,
             color: "#1a1a1a",
-            border: "1px solid rgba(103,160,196,0.2)",
+            border: "1px solid rgba(59,130,246,0.25)",
             boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
           }}
         >
@@ -311,6 +311,7 @@ export default function Home() {
             height: roomHeightPx,
             border: "2px solid black",
             background: "#f9f9f9",
+            overflow: "hidden",
           }}>
             
           {/* LIGHTS */}
